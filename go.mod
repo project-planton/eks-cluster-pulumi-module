@@ -1,23 +1,19 @@
 module github.com/plantoncloud/eks-cluster-pulumi-module
 
-go 1.23.0
-
-toolchain go1.23.1
-
-//replace github.com/plantoncloud/project-planton => ../../plantoncloud/project-planton
+go 1.23.1
 
 //replace github.com/plantoncloud/pulumi-module-golang-commons => ../../plantoncloud/pulumi-module-golang-commons
 
 require (
 	github.com/pkg/errors v0.9.1
-	github.com/plantoncloud/project-planton/apis v0.0.0-20240928044211-9168d6c7a46b
-	github.com/plantoncloud/pulumi-module-golang-commons v0.0.0-20240928073143-7b29b143661c
+	github.com/plantoncloud/pulumi-module-golang-commons v0.0.0-20240930122638-5bcefac53812
 	github.com/pulumi/pulumi-aws/sdk/v6 v6.42.1
 	github.com/pulumi/pulumi/sdk/v3 v3.129.0
 )
 
 require (
 	buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go v1.34.2-20240920164238-5a7b106cbb87.2 // indirect
+	buf.build/gen/go/plantoncloud/project-planton/protocolbuffers/go v1.34.2-20240930080942-f846802b359d.2 // indirect
 	dario.cat/mergo v1.0.0 // indirect
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
