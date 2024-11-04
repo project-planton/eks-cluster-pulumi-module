@@ -48,9 +48,26 @@ The module operates by accepting an AWS EKS Cluster API resource definition as i
 
 - **Status Outputs**: Outputs from the Pulumi deployment, such as the cluster endpoint, certificate authority data, and VPC ID, are captured and stored in `status.stackOutputs`. This information is crucial for connecting to the cluster and deploying applications.
 
+
+## Inputs
+
+- **vpcId**: The VPC ID where the EKS cluster will be deployed.
+- **subnetIds**: A list of subnet IDs for the EKS cluster.
+- **clusterRoleArn**: The ARN of the IAM role for the EKS cluster.
+- **nodeGroupRoleArn**: The ARN of the IAM role for the node group.
+- **securityGroupIds**: A list of security group IDs for the EKS cluster.
+- **clusterName**: (Optional) The name of the EKS cluster. Defaults to `eks-cluster`.
+- **tags**: (Optional) Tags to apply to resources.
+
+## Outputs
+
+- **clusterName**: The name of the EKS cluster.
+- **clusterEndpoint**: The endpoint of the EKS cluster.
+- **clusterArn**: The ARN of the EKS cluster.
+
 ## Usage
 
-Refer to the example section for usage instructions.
+- Refer to `example.md` for an example of how to use this module.
 
 ## Limitations
 

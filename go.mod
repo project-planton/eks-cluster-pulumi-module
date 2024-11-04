@@ -8,8 +8,8 @@ require (
 	buf.build/gen/go/project-planton/apis/protocolbuffers/go v1.35.1-20241012091823-fbe6fb0746f9.1
 	github.com/pkg/errors v0.9.1
 	github.com/project-planton/pulumi-module-golang-commons v0.0.0-20241012092225-2e664ff79f70
-	github.com/pulumi/pulumi-aws/sdk/v6 v6.42.1
-	github.com/pulumi/pulumi/sdk/v3 v3.129.0
+	github.com/pulumi/pulumi-aws/sdk/v6 v6.57.0
+	github.com/pulumi/pulumi/sdk/v3 v3.136.1
 )
 
 require (

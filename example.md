@@ -21,7 +21,7 @@ spec:
   workersManagementMode: MANAGED
 ```
 
-# Example with Existing VPC
+# Example with Existing Network
 
 This example creates an EKS Cluster in an existing VPC.
 
@@ -34,7 +34,13 @@ spec:
   awsCredentialId: my-aws-credential-id
   region: us-east-1
   vpcId: vpc-0123456789abcdef0
+  securityGroupId: sg-01234455jkasd
+  subnetIds:
+    - subnet-1234
+    - subnet-4567
+    - subnet-202412312
   workersManagementMode: MANAGED
+
 ```
 
 # Example with Environment Variables
