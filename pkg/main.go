@@ -29,8 +29,8 @@ func Resources(ctx *pulumi.Context, stackInput *eksclusterv1.EksClusterStackInpu
 	}
 
 	// Prepare SubnetIds and SecurityGroupIds as pulumi.StringArray
-	subnetIds := pulumi.ToStringArray(eksCluster.Spec.SubnetIds)
-	securityGroupIds := pulumi.ToStringArray(eksCluster.Spec.SecurityGroupIds)
+	subnetIds := pulumi.ToStringArray(eksCluster.Spec.Subnets)
+	securityGroupIds := pulumi.ToStringArray(eksCluster.Spec.SecurityGroups)
 
 	// Create EKS cluster
 	eksClusterResource, err := eks.NewCluster(ctx,
@@ -56,7 +56,7 @@ func Resources(ctx *pulumi.Context, stackInput *eksclusterv1.EksClusterStackInpu
 			ClusterName:   eksClusterResource.Name,
 			NodeGroupName: pulumi.String(fmt.Sprintf("%s-node-group", eksCluster.Metadata.Name)),
 			NodeRoleArn:   pulumi.String(eksCluster.Spec.NodeRoleArn),
-			SubnetIds:     pulumi.ToStringArray(eksCluster.Spec.SubnetIds),
+			SubnetIds:     pulumi.ToStringArray(eksCluster.Spec.Subnets),
 			InstanceTypes: pulumi.StringArray{
 				pulumi.String(eksCluster.Spec.InstanceType),
 			},

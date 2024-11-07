@@ -56,9 +56,9 @@ metadata:
 spec:
   region: us-east-1
   vpcId: "vpc-0123456789abcdef0"
-  securityGroupId: 
+  securityGroups: 
     - "sg-01234455jkasd"
-  subnetIds:
+  subnets:
     - "subnet-1234"
     - "subnet-4567"
     - "subnet-2024"
