@@ -75,6 +75,35 @@ The module operates by accepting an AWS EKS Cluster API resource definition as i
 
 - **Region and VPC Changes**: Updating the `region` or `vpcId` fields in the `spec` may result in the recreation of the EKS cluster, as these are critical properties that affect the cluster's deployment.
 
+## Local Development
+### To update the spec of the EKS cluster:
+* **Navigate to the Protobuf File**:- To update the EKS cluster specification, navigate to `project-platon/api/project/platon/provider/aws/eks-cluster/vi/spec.proto`.
+* **Modify the Protobuf Definition**:
+  - Example: Add a new field `repeated string subnets = 4;` to include an additional subnet.
+   ```protobuf
+   message EKSClusterSpec {
+       // Existing fields...
+       repeated string subnets = 4;
+   }
+   ```
+### Build APIs Locally and release a local cli version
+* Build the APIs and update the local cli
+  - From the root of the `project-planton` repository, run:
+    ```bash
+    make build-APIs & make local
+    ```
+  - This command invokes the protobuf compiler, generating updated Golang stubs based on your local changes and cli utilizes the locally generated stubs, reflecting your recent protobuf modifications.
+
+### Point the `eks-cluster-pulumi-module` to utilize the local changes this helps us to iterate locally.
+* Update the `go.mod` file in the `eks-cluster-pulumi-module` directory to point to the local `project-planton` repository.
+  ```go
+  replace github.com/project-planton/project-planton => ../project-planton
+  ```
+* Run the following command to update the dependencies:
+  ```bash
+    make build
+    ```
+
 ## Contributing
 
 We welcome contributions to enhance the functionality of this module. Please submit pull requests or open issues to help improve the module and its documentation.
