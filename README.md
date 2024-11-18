@@ -48,15 +48,110 @@ The module operates by accepting an AWS EKS Cluster API resource definition as i
 
 - **Status Outputs**: Outputs from the Pulumi deployment, such as the cluster endpoint, certificate authority data, and VPC ID, are captured and stored in `status.stackOutputs`. This information is crucial for connecting to the cluster and deploying applications.
 
+
+## Inputs
+
+- **vpcId**: The VPC ID where the EKS cluster will be deployed.
+- **subnetIds**: A list of subnet IDs for the EKS cluster.
+- **clusterRoleArn**: The ARN of the IAM role for the EKS cluster.
+- **nodeGroupRoleArn**: The ARN of the IAM role for the node group.
+- **securityGroupIds**: A list of security group IDs for the EKS cluster.
+- **clusterName**: (Optional) The name of the EKS cluster. Defaults to `eks-cluster`.
+- **tags**: (Optional) Tags to apply to resources.
+
+## Outputs
+
+- **clusterName**: The name of the EKS cluster.
+- **clusterEndpoint**: The endpoint of the EKS cluster.
+- **clusterArn**: The ARN of the EKS cluster.
+
 ## Usage
 
-Refer to the example section for usage instructions.
+- Refer to `example.md` for an example of how to use this module.
 
 ## Limitations
 
 - **Advanced Features**: Certain advanced features of EKS, such as custom networking configurations, advanced IAM roles, or specific add-ons, that are not specified in the current API resource definition may not be supported. Future updates may include additional capabilities based on user needs.
 
 - **Region and VPC Changes**: Updating the `region` or `vpcId` fields in the `spec` may result in the recreation of the EKS cluster, as these are critical properties that affect the cluster's deployment.
+
+## Local Development
+### Note: 
+* This process will help to iterate locally by making changes and testing without needing to push updates externally.
+* Set the [AWS credentials](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html) using aws cli.
+* Setup [Pulumi](https://www.pulumi.com/docs/iac/concepts/state-and-backends/)
+
+### To update the spec of the EKS cluster:
+* **Navigate to the Protobuf File**:- To update the EKS cluster specification, navigate to `project-platon/api/project/platon/provider/aws/eks-cluster/vi/spec.proto`.
+* **Modify the Protobuf Definition**:
+  - Example: Add a new field `repeated string subnets = 4;` to include an additional subnet.
+   ```go
+   message EKSClusterSpec {
+       // Existing fields...
+       repeated string subnets = 4;
+   }
+   ```
+### Build APIs Locally and release a local cli version
+* Build the APIs and update the local cli
+  - From the root of the `project-planton` repository, run:
+    ```bash
+    make build-APIs & make local
+    ```
+  - This command invokes the protobuf compiler, generating updated Golang stubs based on your local changes and cli utilizes the locally generated stubs, reflecting your recent protobuf modifications.
+
+### Point the `eks-cluster-pulumi-module` to utilize the local changes this helps us to iterate locally.
+* Update the `go.mod` file in the `eks-cluster-pulumi-module` directory to point to the local `project-planton` repository.
+  ```go
+  replace github.com/project-planton/project-planton => ../project-planton
+  ```
+* Run the following command to update the dependencies:
+  ```bash
+    make build
+    ```
+
+### Test the features locally
+```bash
+project-planton pulumi up --manifest <manifest_path>/eks.yaml  --stack <stack_path> --module-dir <path>/eks-cluster-pulumi-module
+```
+```bash
+Enter your passphrase to unlock config/secrets
+    (set PULUMI_CONFIG_PASSPHRASE or PULUMI_CONFIG_PASSPHRASE_FILE to remember):
+Enter your passphrase to unlock config/secrets
+Previewing update (eks):
+     Type                     Name                 Plan
+ +   pulumi:pulumi:Stack      handson-eks          create
+ +   ├─ pulumi:providers:aws  classic-provider     create
+ +   ├─ aws:eks:Cluster       eksCluster           create
+ +   └─ aws:eks:NodeGroup     eksManagedNodeGroup  create
+
+Outputs:
+    eksClusterName  : "planton-test-eks-cluster"
+    eksNodeGroupName: "planton-test-eks-cluster-node-group"
+
+Resources:
+    + 4 to create
+
+Do you want to perform this update? yes
+Updating (eks):
+     Type                     Name                 Status
+ +   pulumi:pulumi:Stack      handson-eks          created (553s)
+ +   ├─ pulumi:providers:aws  classic-provider     created (0.00s)
+ +   ├─ aws:eks:Cluster       eksCluster           created (413s)
+ +   └─ aws:eks:NodeGroup     eksManagedNodeGroup  created (137s)
+
+Outputs:
+    eksClusterName  : "planton-test-eks-cluster"
+    eksNodeGroupName: "planton-test-eks-cluster-node-group"
+
+Resources:
+    + 4 created
+
+Duration: 9m16s
+```
+* Set aws eks cluster config locally
+```bash
+aws eks update-kubeconfig --name <cluster_name> --region us-east-1
+```
 
 ## Contributing
 

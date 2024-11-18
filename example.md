@@ -2,6 +2,29 @@
 
 Create a YAML file using the examples shown below. After the YAML file is created, use the following command to apply:
 
+# Set credentials
+To configure AWS credentials for your Pulumi project, you can use one of the following methods:
+
+- Method 1: Using Pulumi Configuration
+```shell
+pulumi config set aws:region us-east-1
+pulumi config set aws:accessKeyId <access-key>
+pulumi config set aws:secretAccessKey <secret-key>
+```
+- Method 2: Using AWS Configuration Files
+  Alternatively, you can configure the AWS region and credentials in the AWS configuration files.
+```shell
+# ~/.aws/config
+[default]
+region = us-east-1
+
+# ~/.aws/credentials
+[default]
+aws_access_key_id = ***************
+aws_secret_access_key = ***************
+```
+
+
 ```shell
 planton apply -f <yaml-path>
 ```
@@ -21,7 +44,7 @@ spec:
   workersManagementMode: MANAGED
 ```
 
-# Example with Existing VPC
+# Example with Existing Network
 
 This example creates an EKS Cluster in an existing VPC.
 
@@ -31,10 +54,21 @@ kind: EksCluster
 metadata:
   name: my-eks-cluster-with-vpc
 spec:
-  awsCredentialId: my-aws-credential-id
   region: us-east-1
-  vpcId: vpc-0123456789abcdef0
-  workersManagementMode: MANAGED
+  vpcId: "vpc-0123456789abcdef0"
+  securityGroups: 
+    - "sg-01234455jkasd"
+  subnets:
+    - "subnet-1234"
+    - "subnet-4567"
+    - "subnet-2024"
+  roleArn: "arn:aws:iam::123456789012:role/EKSClusterRole"
+  nodeRoleArn: "arn:aws:iam::123456789012:role/EKSNodeRole"
+  instanceType: "t3.medium"
+  desiredSize: 2 # Number of worker nodes
+  maxSize: 10 # Maximum number of worker nodes
+  minSize: 2 # Minimum number of worker nodes
+
 ```
 
 # Example with Environment Variables
