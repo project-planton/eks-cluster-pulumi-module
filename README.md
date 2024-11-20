@@ -18,8 +18,6 @@ The AWS EKS Cluster Pulumi Module provides a standardized and efficient way to d
 
 - **VPC Integration**: Offers the option to deploy the EKS cluster into an existing VPC by specifying the `vpcId`, or to create a new VPC if not specified. This ensures seamless integration with existing network infrastructures.
 
-- **Worker Node Management Modes**: Supports different worker node management modes via the `workersManagementMode` field, including self-managed nodes, managed node groups, and Fargate profiles. This provides flexibility in how compute resources are provisioned and managed.
-
 - **Credential Management**: Securely handles AWS credentials via the `awsCredentialId` field, ensuring authenticated and authorized resource deployments without exposing sensitive information.
 
 - **Status Reporting**: Captures and stores outputs such as the cluster endpoint, certificate authority data, and VPC ID in `status.stackOutputs`. This facilitates easy reference and integration with other systems, such as Kubernetes clients or additional automation tools.
@@ -53,8 +51,8 @@ The module operates by accepting an AWS EKS Cluster API resource definition as i
 
 - **vpcId**: The VPC ID where the EKS cluster will be deployed.
 - **subnetIds**: A list of subnet IDs for the EKS cluster.
-- **clusterRoleArn**: The ARN of the IAM role for the EKS cluster.
-- **nodeGroupRoleArn**: The ARN of the IAM role for the node group.
+- **clusterRoleArn**: (Optional) The ARN of the IAM role for the EKS cluster.
+- **nodeGroupRoleArn**: (Optional) The ARN of the IAM role for the node group.
 - **securityGroupIds**: A list of security group IDs for the EKS cluster.
 - **clusterName**: (Optional) The name of the EKS cluster. Defaults to `eks-cluster`.
 - **tags**: (Optional) Tags to apply to resources.
@@ -110,9 +108,38 @@ The module operates by accepting an AWS EKS Cluster API resource definition as i
     ```
 
 ### Test the features locally
+* Sample Manifest
+```yaml
+apiVersion: code2cloud.planton.cloud/v1
+kind: EksCluster
+metadata:
+  name: planton-test-eks-cluster
+spec:
+  region: us-east-1
+  securityGroups:
+  - "sg-502a052d"
+  subnets:
+  - "subnet-******"
+  - "subnet-******"
+  - "subnet-******"
+  roleArn: "arn:aws:iam::******:role/EKSClusterRole" # optional
+  nodeRoleArn: "arn:aws:iam::******:role/EKSNodeRole" # optional
+  instanceType: "t3.medium"
+  desiredSize: 2 # Number of worker nodes
+  maxSize: 10 # Maximum number of worker nodes
+  minSize: 2 # Minimum number of worker nodes
+  tags: # optional
+    Name: "planton-test-eks-cluster"
+    Environment: "test"
+    Owner: "project-planton"
+    Team: "planton"
+
+```
+* Run command
 ```bash
 project-planton pulumi up --manifest <manifest_path>/eks.yaml  --stack <stack_path> --module-dir <path>/eks-cluster-pulumi-module
 ```
+* Output
 ```bash
 Enter your passphrase to unlock config/secrets
     (set PULUMI_CONFIG_PASSPHRASE or PULUMI_CONFIG_PASSPHRASE_FILE to remember):
